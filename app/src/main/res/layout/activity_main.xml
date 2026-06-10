@@ -48,6 +48,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvMiniSongTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Stitch Melody Stream"
@@ -56,6 +57,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvMiniArtistName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Groove Artist"
@@ -64,6 +66,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/ivPlayPause"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"

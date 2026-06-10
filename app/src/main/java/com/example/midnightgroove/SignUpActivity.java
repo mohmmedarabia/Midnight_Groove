@@ -1,4 +1,4 @@
-package com.example.midnightgroove; // تأكد أن هذا السطر يطابق اسم الباكج الحقيقي عندك فوق
+package com.example.midnightgroove;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,49 +8,58 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.midnightgroove.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText etRegisterName, etRegisterEmail, etRegisterPassword;
     private Button btnSignUp;
     private TextView tvGoToLogin;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // ربط العناصر بكود الـ XML
+        mAuth = FirebaseAuth.getInstance();
+
         etRegisterName = findViewById(R.id.etRegisterName);
         etRegisterEmail = findViewById(R.id.etRegisterEmail);
         etRegisterPassword = findViewById(R.id.etRegisterPassword);
         btnSignUp = findViewById(R.id.btnSignUp);
         tvGoToLogin = findViewById(R.id.tvGoToLogin);
 
-        // كبسة إنشاء الحساب
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = etRegisterName.getText().toString().trim();
-                String email = etRegisterEmail.getText().toString().trim();
-                String password = etRegisterPassword.getText().toString().trim();
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-                if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(SignUpActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Account Created Successfully!", Toast.LENGTH_SHORT).show();
-                    finish(); // بيرجع تلقائياً لشاشة اللوج إن
-                }
+        btnSignUp.setOnClickListener(v -> {
+            android.util.Log.d("SignUpActivity", "Sign Up button clicked");
+            String name = etRegisterName.getText().toString().trim();
+            String email = etRegisterEmail.getText().toString().trim();
+            String password = etRegisterPassword.getText().toString().trim();
+
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(SignUpActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            } else if (password.length() < 6) {
+                Toast.makeText(SignUpActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            } else {
+                registerUser(email, password, name);
             }
         });
 
-        // كبسة العودة للوج إن لو عنده حساب أصلاً
-        tvGoToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); // بيغلق الشاشة الحالية وبرجع للي قبلها
-            }
-        });
+        tvGoToLogin.setOnClickListener(v -> finish());
+    }
+
+    private void registerUser(String email, String password, String name) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(SignUpActivity.this, "Account Created Successfully!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        String error = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                        Toast.makeText(SignUpActivity.this, "Registration failed: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
