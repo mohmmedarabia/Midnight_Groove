@@ -27,13 +27,17 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:id="@+id/ivProfile"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_menu_manage"
-                android:contentDescription="Settings"
-                app:tint="@color/text_muted" />
+                android:src="@android:drawable/ic_menu_gallery"
+                android:contentDescription="Profile"
+                app:tint="@color/text_white"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
         </RelativeLayout>
 
         <GridLayout
@@ -44,13 +48,16 @@
             android:layout_marginBottom="28dp">
 
             <LinearLayout
+                android:id="@+id/llLikedSongs"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="5dp"
                 android:background="@color/spotify_card_bg"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true">
 
                 <View
                     android:layout_width="56dp"
@@ -68,13 +75,16 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llAlbumMidnight"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="5dp"
                 android:background="@color/spotify_card_bg"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true">
 
                 <View
                     android:layout_width="56dp"
@@ -85,6 +95,60 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Midnight Groove"
+                    android:textColor="@color/text_white"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llAlbumNeon"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="5dp"
+                android:background="@color/spotify_card_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true">
+
+                <View
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@color/spotify_deep_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Neon Beats"
+                    android:textColor="@color/text_white"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llAlbumVibes"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="5dp"
+                android:background="@color/spotify_card_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true">
+
+                <View
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@color/spotify_green" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Summer Vibes"
                     android:textColor="@color/text_white"
                     android:textSize="13sp"
                     android:textStyle="bold"

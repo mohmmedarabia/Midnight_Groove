@@ -3,9 +3,13 @@ package com.example.midnightgroove;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
@@ -34,6 +38,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         Song song = songList.get(position);
         holder.tvTitle.setText(song.getTitle());
         holder.tvArtist.setText(song.getArtist());
+        
+        if (song.getCoverUrl() != null && !song.getCoverUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(song.getCoverUrl())
+                    .placeholder(R.color.spotify_card_bg)
+                    .into(holder.ivAlbumArt);
+        }
+
         holder.itemView.setOnClickListener(v -> listener.onSongClick(song));
     }
 
@@ -44,11 +56,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     static class SongViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvArtist;
+        ImageView ivAlbumArt;
 
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvSongTitle);
             tvArtist = itemView.findViewById(R.id.tvArtistName);
+            ivAlbumArt = itemView.findViewById(R.id.ivAlbumArt);
         }
     }
 }

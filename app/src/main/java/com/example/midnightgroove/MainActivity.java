@@ -2,8 +2,11 @@ package com.example.midnightgroove;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView ivPlayPause;
     private TextView tvMiniSongTitle, tvMiniArtistName;
+    private Song currentSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         ivPlayPause = findViewById(R.id.ivPlayPause);
         tvMiniSongTitle = findViewById(R.id.tvMiniSongTitle);
         tvMiniArtistName = findViewById(R.id.tvMiniArtistName);
+        View miniPlayerBar = findViewById(R.id.mini_player_bar);
 
         // تعيين شاشة الـ Home Fragment كشاشة افتراضية أول ما يفتح الـ MainActivity
         if (savedInstanceState == null) {
@@ -46,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 musicPlayer.resume();
                 ivPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+            }
+        });
+
+        miniPlayerBar.setOnClickListener(v -> {
+            if (currentSong != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, PlayerFragment.newInstance(currentSong))
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -74,8 +88,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateMiniPlayer(Song song) {
+        this.currentSong = song;
         tvMiniSongTitle.setText(song.getTitle());
         tvMiniArtistName.setText(song.getArtist());
         ivPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+        
+        ImageView ivMiniAlbumArt = findViewById(R.id.ivMiniAlbumArt);
+        if (song.getCoverUrl() != null && !song.getCoverUrl().isEmpty()) {
+            Glide.with(this).load(song.getCoverUrl()).into(ivMiniAlbumArt);
+        }
+    }
+
+    public void syncMiniPlayerState() {
+        if (MusicPlayer.getInstance(this).isPlaying()) {
+            ivPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            ivPlayPause.setImageResource(android.R.drawable.ic_media_play);
+        }
     }
 }

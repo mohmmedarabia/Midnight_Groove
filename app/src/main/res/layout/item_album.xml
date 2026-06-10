@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center_horizontal"
+    android:background="?attr/selectableItemBackground">
+
+    <View
+        android:id="@+id/ivAlbumCover"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@color/spotify_card_bg" />
+
+    <TextView
+        android:id="@+id/tvAlbumTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Album Title"
+        android:textColor="@color/text_white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvAlbumArtist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Artist Name"
+        android:textColor="@color/text_muted"
+        android:textSize="12sp"
+        android:layout_marginTop="2dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center"/>
+
+</LinearLayout>

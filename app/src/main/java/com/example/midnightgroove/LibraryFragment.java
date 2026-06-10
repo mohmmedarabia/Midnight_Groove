@@ -26,12 +26,49 @@ public class LibraryFragment extends Fragment {
             startActivity(intent);
         });
 
-        ImageView btnLogout = view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+        ImageView ivProfile = view.findViewById(R.id.ivProfile);
+        ivProfile.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ProfileFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        view.findViewById(R.id.tvFilterPlaylists).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new PlaylistsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        view.findViewById(R.id.tvFilterArtists).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ArtistsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        View llLikedSongs = view.findViewById(R.id.llLikedSongs);
+        llLikedSongs.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new LikedSongsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        view.findViewById(R.id.llRecentItem).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new RecentlyPlayedFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        View tvFilterAlbums = view.findViewById(R.id.tvFilterAlbums);
+        tvFilterAlbums.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new AlbumsFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         return view;

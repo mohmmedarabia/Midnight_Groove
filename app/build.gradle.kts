@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.ui)
     implementation(libs.media3.session)
+    implementation(libs.glide)
     implementation(libs.youtube.extractor)
     implementation(libs.googleid)
     implementation(libs.material)

@@ -36,18 +36,32 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_search_category_default"
+                android:contentDescription="Search Icon"
                 app:tint="@android:color/darker_gray" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="What do you want to listen to?"
-                android:textColor="@android:color/darker_gray"
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="What do you want to listen to?"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
                 android:textSize="15sp"
-                android:layout_marginStart="10dp" />
+                android:layout_marginStart="10dp"
+                android:inputType="text"
+                android:imeOptions="actionSearch" />
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSearchResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
         <TextView
+            android:id="@+id/tvBrowseAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Browse all"
@@ -57,18 +71,22 @@
             android:layout_marginBottom="16dp" />
 
         <GridLayout
+            android:id="@+id/glGenres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
             android:alignmentMode="alignMargins">
 
             <LinearLayout
+                android:id="@+id/llGenrePop"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:background="#E61E32"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -79,12 +97,15 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llGenreHipHop"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:background="#283EA7"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,12 +116,15 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llGenrePodcasts"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:background="#27856A"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,12 +135,15 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llGenreRock"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:background="#7D4B32"
-                android:padding="12dp">
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

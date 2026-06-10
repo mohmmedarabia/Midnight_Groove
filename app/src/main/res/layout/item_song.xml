@@ -7,10 +7,11 @@
     android:padding="8dp"
     android:background="?attr/selectableItemBackground">
 
-    <View
+    <ImageView
         android:id="@+id/ivAlbumArt"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:scaleType="centerCrop"
         android:background="@color/spotify_card_bg" />
 
     <LinearLayout

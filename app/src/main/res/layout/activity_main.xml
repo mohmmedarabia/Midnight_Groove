@@ -31,12 +31,13 @@
             android:progress="35"
             android:progressTint="@color/spotify_green" />
 
-        <View
+        <ImageView
             android:id="@+id/ivMiniAlbumArt"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:layout_marginTop="4dp"
+            android:scaleType="centerCrop"
             android:background="@color/spotify_deep_black" />
 
         <LinearLayout

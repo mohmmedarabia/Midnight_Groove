@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,21 +19,23 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class LikedSongsFragment extends Fragment {
 
-    private RecyclerView rvRecentlyAdded;
+    private RecyclerView rvLikedSongs;
     private SongAdapter songAdapter;
     private List<Song> songList;
     private FirebaseFirestore db;
+    private ImageView btnBack;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_liked_songs, container, false);
 
-        rvRecentlyAdded = view.findViewById(R.id.rvRecentlyAdded);
-        rvRecentlyAdded.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvLikedSongs = view.findViewById(R.id.rvLikedSongs);
+        btnBack = view.findViewById(R.id.btnBack);
 
+        rvLikedSongs.setLayoutManager(new LinearLayoutManager(getContext()));
         songList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
@@ -42,39 +45,18 @@ public class HomeFragment extends Fragment {
                 ((MainActivity) getActivity()).updateMiniPlayer(song);
             }
         });
-        rvRecentlyAdded.setAdapter(songAdapter);
+        rvLikedSongs.setAdapter(songAdapter);
 
-        view.findViewById(R.id.llLikedSongs).setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LikedSongsFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
+        btnBack.setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
-        view.findViewById(R.id.llAlbumMidnight).setOnClickListener(v -> navigateToAlbums());
-        view.findViewById(R.id.llAlbumNeon).setOnClickListener(v -> navigateToAlbums());
-        view.findViewById(R.id.llAlbumVibes).setOnClickListener(v -> navigateToAlbums());
-
-        view.findViewById(R.id.ivProfile).setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new ProfileFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        loadSongs();
+        loadLikedSongs();
 
         return view;
     }
 
-    private void navigateToAlbums() {
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AlbumsFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void loadSongs() {
+    private void loadLikedSongs() {
+        // For now, loading all songs as a placeholder. 
+        // In a real app, you'd filter by a 'liked' field or a user-specific collection.
         db.collection("songs").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 songList.clear();
@@ -84,7 +66,7 @@ public class HomeFragment extends Fragment {
                 }
                 songAdapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(getContext(), "Error getting songs", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error getting liked songs", Toast.LENGTH_SHORT).show();
             }
         });
     }
