@@ -7,6 +7,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.midnightgroove.FireBaseServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -36,10 +39,11 @@ import at.huber.youtubeExtractor.YtFile;
 public class AddSongActivity extends AppCompatActivity {
 
     private EditText etSongTitle, etArtistName, etYoutubeUrl;
-    private Button btnUpload;
+    private Button btnUpload, btnSelectCover;
     private TextView tvFileName;
+    private ImageView ivCoverPreview;
     private ProgressBar progressBar;
-    private Uri audioUri;
+    private Uri audioUri, coverUri;
 
     private FirebaseStorage storage;
     private FirebaseFirestore db;
@@ -54,6 +58,14 @@ public class AddSongActivity extends AppCompatActivity {
                 }
             });
 
+    private final ActivityResultLauncher<String> pickCoverLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (uri != null) {
+                    coverUri = uri;
+                    ivCoverPreview.setImageURI(uri);
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +75,8 @@ public class AddSongActivity extends AppCompatActivity {
         etArtistName = findViewById(R.id.etArtistName);
         etYoutubeUrl = findViewById(R.id.etYoutubeUrl);
         btnUpload = findViewById(R.id.btnUpload);
+        btnSelectCover = findViewById(R.id.btnSelectCover);
+        ivCoverPreview = findViewById(R.id.ivCoverPreview);
         tvFileName = findViewById(R.id.tvFileName);
         progressBar = findViewById(R.id.progressBar);
 
@@ -72,6 +86,7 @@ public class AddSongActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         findViewById(R.id.btnSelectFile).setOnClickListener(v -> pickAudioLauncher.launch("audio/*"));
+        btnSelectCover.setOnClickListener(v -> pickCoverLauncher.launch("image/*"));
 
         btnUpload.setOnClickListener(v -> {
             String ytUrl = etYoutubeUrl.getText().toString().trim();
@@ -153,7 +168,14 @@ public class AddSongActivity extends AppCompatActivity {
                 }
                 android.util.Log.d("AddSong", "Download complete: " + tempFile.getAbsolutePath());
                 
-                runOnUiThread(() -> uploadToFirebase(Uri.fromFile(tempFile), finalTitle));
+                runOnUiThread(() -> {
+                    if (coverUri != null) {
+                        // If user selected a local cover for a YouTube song
+                        uploadToFirebase(Uri.fromFile(tempFile), finalTitle);
+                    } else {
+                        uploadToFirebase(Uri.fromFile(tempFile), finalTitle);
+                    }
+                });
 
             } catch (Exception e) {
                 android.util.Log.e("AddSong", "Download error: " + e.getMessage());
@@ -176,21 +198,38 @@ public class AddSongActivity extends AppCompatActivity {
         btnUpload.setEnabled(false);
 
         String artist = etArtistName.getText().toString().trim();
-        if (artist.isEmpty()) artist = "YouTube Artist";
+        if (artist.isEmpty()) artist = "Unknown Artist";
 
         String songId = UUID.randomUUID().toString();
-        StorageReference ref = storage.getReference().child("songs/" + songId);
+        StorageReference songRef = storage.getReference().child("songs/" + songId);
 
         String finalArtist = artist;
-        ref.putFile(uri)
-                .addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                    saveSongToFirestore(songId, title, finalArtist, downloadUri.toString());
+        songRef.putFile(uri)
+                .addOnSuccessListener(taskSnapshot -> songRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                    if (coverUri != null) {
+                        uploadCoverAndSave(songId, title, finalArtist, downloadUri.toString());
+                    } else {
+                        saveSongToFirestore(songId, title, finalArtist, downloadUri.toString(), "");
+                    }
                 }))
                 .addOnFailureListener(e -> showError("Upload failed: " + e.getMessage()));
     }
 
-    private void saveSongToFirestore(String id, String title, String artist, String url) {
-        Song song = new Song(id, title, artist, url, "");
+    private void uploadCoverAndSave(String songId, String title, String artist, String songUrl) {
+        StorageReference coverRef = storage.getReference().child("covers/" + songId);
+        coverRef.putFile(coverUri)
+                .addOnSuccessListener(taskSnapshot -> coverRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                    saveSongToFirestore(songId, title, artist, songUrl, downloadUri.toString());
+                }))
+                .addOnFailureListener(e -> {
+                    // Even if cover fails, we can save the song without cover
+                    saveSongToFirestore(songId, title, artist, songUrl, "");
+                });
+    }
+
+    private void saveSongToFirestore(String id, String title, String artist, String url, String coverUrl) {
+        String uploaderId = FirebaseAuth.getInstance().getUid();
+        Song song = new Song(id, title, artist, url, coverUrl, uploaderId);
         db.collection("songs").document(id)
                 .set(song)
                 .addOnSuccessListener(aVoid -> {

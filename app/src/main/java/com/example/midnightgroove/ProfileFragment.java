@@ -62,6 +62,13 @@ public class ProfileFragment extends Fragment {
                     .commit();
         });
 
+        view.findViewById(R.id.llProfileMyUploads).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new UploadedSongsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         btnLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getActivity(), LoginActivity.class);

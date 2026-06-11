@@ -6,17 +6,19 @@ public class Song {
     private String artist;
     private String songUrl;
     private String coverUrl;
+    private String uploaderId;
 
     public Song() {
         // Required for Firebase
     }
 
-    public Song(String id, String title, String artist, String songUrl, String coverUrl) {
+    public Song(String id, String title, String artist, String songUrl, String coverUrl, String uploaderId) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.songUrl = songUrl;
         this.coverUrl = coverUrl;
+        this.uploaderId = uploaderId;
     }
 
     public String getId() { return id; }
@@ -33,4 +35,7 @@ public class Song {
 
     public String getCoverUrl() { return coverUrl; }
     public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
+
+    public String getUploaderId() { return uploaderId; }
+    public void setUploaderId(String uploaderId) { this.uploaderId = uploaderId; }
 }
